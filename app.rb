@@ -95,6 +95,76 @@ class CustomHandler < AlexaSkillsRuby::Handler
     update_status "HERE"
   end
 
+  on_intent("BE_RIGHT_BACK") do
+    # add a response to Alexa
+    response.set_output_speech_text("I've updated your status to BE_RIGHT_BACK ")
+    # create a card response in the alexa app
+    response.set_simple_card("Out of Office App", "Status will be right back.")
+    # log the output if needed
+    logger.info 'BE_RIGHT_BACK processed'
+    # send a message to slack
+    update_status "BE_RIGHT_BACK"
+  end
+
+  on_intent("GONE_HOME") do
+    # add a response to Alexa
+    response.set_output_speech_text("I've updated your status to GONE_HOME ")
+    # create a card response in the alexa app
+    response.set_simple_card("Out of Office App", "Status changed to gone home.")
+    # log the output if needed
+    logger.info 'GONE_HOME processed'
+    # send a message to slack
+    update_status "GONE_HOME"
+  end
+
+  on_intent("DO_NOT_DISTURB") do
+    # add a response to Alexa
+    response.set_output_speech_text("I've updated your status to DO_NOT_DISTURB ")
+    # create a card response in the alexa app
+    response.set_simple_card("Out of Office App", "Status is DO_NOT_DISTURB.")
+    # log the output if needed
+    logger.info 'DO_NOT_DISTURB processed'
+    # send a message to slack
+    update_status "DO_NOT_DISTURB"
+  end
+
+  on_intent("BACK_IN") do
+	
+		# Access the slots
+    slots = request.intent.slots
+    puts slots.to_s
+		
+		# Duration is returned in a particular format
+		# Called ISO8601. Translate this into seconds
+    duration = ISO8601::Duration.new( request.intent.slots["duration"] ).to_seconds
+      
+		# This will downsample the duration from a default seconds
+		# To... 
+    if duration > 60 * 60 * 24
+      days = duration/(60 * 60 * 24).round
+      response.set_output_speech_text("I've set you away for #{ days } days")
+    elsif duration > 60 * 60 
+      hours = duration/(60 * 60 ).round
+      response.set_output_speech_text("I've set you away for #{ hours } hours")
+    else 
+      mins = duration/(60).round
+      response.set_output_speech_text("I've set you away for #{ mins } minutes")
+    end
+    logger.info 'BackIn processed'
+    update_status "BACK_IN", duration
+  end
+
+  on_intent("TEST") do
+    response.set_output_speech_ssml(
+    "<speak>
+    I want to tell you a secret. 
+    <amazon:effect name="whispered">I am not a real human.</amazon:effect>.
+    Can you believe it?
+    </speak>")
+
+    logger.info 'TEST processed'
+  end
+
 end
 
 # ----------------------------------------------------------------------
