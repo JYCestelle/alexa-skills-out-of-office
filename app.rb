@@ -32,7 +32,7 @@ def get_message_for status, duration
   message = "other/unknown"
   
 	# looks up a message based on the Status provided
-  if status == "HERE"
+  if status == "Here"
     message = ENV['APP_USER'].to_s + " is in the office."
   elsif status == "BACK_IN"
     message = ENV['APP_USER'].to_s + " will be back in #{(duration/60).round} minutes"
@@ -92,7 +92,7 @@ class CustomHandler < AlexaSkillsRuby::Handler
 		# log the output if needed
     logger.info 'Here processed'
 		# send a message to slack
-    update_status "HERE"
+    update_status "Here"
   end
 
   on_intent("BE_RIGHT_BACK") do
@@ -150,7 +150,7 @@ class CustomHandler < AlexaSkillsRuby::Handler
       mins = duration/(60).round
       response.set_output_speech_text("I've set you away for #{ mins } minutes")
     end
-    logger.info 'BackIn processed'
+    logger.info 'BACK_IN processed'
     update_status "BACK_IN", duration
   end
 
@@ -158,7 +158,7 @@ class CustomHandler < AlexaSkillsRuby::Handler
     response.set_output_speech_ssml(
     "<speak>
     I want to tell you a secret. 
-    <amazon:effect name="whispered">I am not a real human.</amazon:effect>.
+    <amazon:effect name='whispered'>I am not a real human.</amazon:effect>.
     Can you believe it?
     </speak>")
 
